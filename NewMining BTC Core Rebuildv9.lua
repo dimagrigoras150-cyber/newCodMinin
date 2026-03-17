@@ -1,12 +1,12 @@
 script_name('AURA CORE SYSTEM v3.3 Beta')
--- Подключение библиотек и кодировкаІ
+-- РџРѕРґРєР»СЋС‡РµРЅРёРµ Р±РёР±Р»РёРѕС‚РµРє Рё РєРѕРґРёСЂРѕРІРєР°Р†
 local imgui = require('mimgui')
 local encoding = require('encoding')
 local sampev = require("lib.samp.events")
 local vkeys = require('vkeys')
 encoding.default = 'CP1251'
 local u8 = encoding.UTF8
--- ===== БАЗОВОЕ СОСТОЯНИЕ =====
+-- ===== Р‘РђР—РћР’РћР• РЎРћРЎРўРћРЇРќРР• =====
 local showMenu = imgui.new.bool(false)
 local showControlCenter = imgui.new.bool(false)
 local showMonitoring = imgui.new.bool(false)
@@ -65,14 +65,14 @@ local maxHouses = 15
 local maxGpu = 20
 local selectedHouseTab = 1
 local selectedGpuCard = 1
--- Данные по видеокартам: gpu_data[дом][карта]
+-- Р”Р°РЅРЅС‹Рµ РїРѕ РІРёРґРµРѕРєР°СЂС‚Р°Рј: gpu_data[РґРѕРј][РєР°СЂС‚Р°]
 local gpu_data = {}
 
 for h = 1, maxHouses do
     gpu_data[h] = {}
     for i = 1, maxGpu do
         gpu_data[h][i] = {
-            status = u8"Нет данных",
+            status = u8"РќРµС‚ РґР°РЅРЅС‹С…",
             btc = "0.000000",
             level = "0",
             temp = "0"
@@ -84,18 +84,18 @@ local manualOpen = {
     active = false
 }
 
--- ===== ДВИЖОК БОТА =====
+-- ===== Р”Р’РР–РћРљ Р‘РћРўРђ =====
 local bot = {
-    enabled = false,          -- включен ли бот
+    enabled = false,          -- РІРєР»СЋС‡РµРЅ Р»Рё Р±РѕС‚
     mode = "idle",            -- idle / one_house / all_houses / scan
     state = "idle",           -- wait_house_list / wait_gpu_list / wait_gpu_menu
-    house = 1,                -- текущий дом
-    gpu = 1,                  -- текущая видеокарта
-    needLaunchPaused = false, -- потом пригодится
-    scanHouse = 1,            -- для глобального сканирования
+    house = 1,                -- С‚РµРєСѓС‰РёР№ РґРѕРј
+    gpu = 1,                  -- С‚РµРєСѓС‰Р°СЏ РІРёРґРµРѕРєР°СЂС‚Р°
+    needLaunchPaused = false, -- РїРѕС‚РѕРј РїСЂРёРіРѕРґРёС‚СЃСЏ
+    scanHouse = 1,            -- РґР»СЏ РіР»РѕР±Р°Р»СЊРЅРѕРіРѕ СЃРєР°РЅРёСЂРѕРІР°РЅРёСЏ
     isScanning = false
 }
--- ===== СЛУЖЕБНЫЕ ФУНКЦИИ =====
+-- ===== РЎР›РЈР–Р•Р‘РќР«Р• Р¤РЈРќРљР¦РР =====
 local function msg(text)
     sampAddChatMessage("{FFD700}[AURA] {FFFFFF}" .. text, -1)
 end
@@ -111,7 +111,7 @@ local function refreshSelectedHouse()
     singleHouseRefresh.active = true
     singleHouseRefresh.house = selectedHouseTab
 
-    msg("Обновление дома #" .. singleHouseRefresh.house)
+    msg("РћР±РЅРѕРІР»РµРЅРёРµ РґРѕРјР° #" .. singleHouseRefresh.house)
 
     lua_thread.create(function()
         wait(200)
@@ -161,7 +161,7 @@ local function startOneHouse()
     bot.house = selectedHouseTab
     bot.gpu = 1
     bot.state = "wait_house_list"
-    msg("Запуск сбора для дома #" .. bot.house)
+    msg("Р—Р°РїСѓСЃРє СЃР±РѕСЂР° РґР»СЏ РґРѕРјР° #" .. bot.house)
     sampProcessChatInput("/flashminer")
 end
 
@@ -171,7 +171,7 @@ local function startAllHouses()
     bot.house = 1
     bot.gpu = 1
     bot.state = "wait_house_list"
-    msg("Запуск сбора со всех домов")
+    msg("Р—Р°РїСѓСЃРє СЃР±РѕСЂР° СЃРѕ РІСЃРµС… РґРѕРјРѕРІ")
     sampProcessChatInput("/flashminer")
 end
 
@@ -192,7 +192,7 @@ local function startGlobalScan()
     bot.scanHouse = 1
 
     openAuraUiWithMonitoring()
-    msg("Запуск синхронизации всех домов")
+    msg("Р—Р°РїСѓСЃРє СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё РІСЃРµС… РґРѕРјРѕРІ")
 
     sampProcessChatInput("/flashminer")
 end
@@ -213,7 +213,7 @@ function main()
         wait(500)
     end
 
-    msg("Скрипт загружен. F2 - меню")
+    msg("РЎРєСЂРёРїС‚ Р·Р°РіСЂСѓР¶РµРЅ. F2 - РјРµРЅСЋ")
 	resetScannerState()
     sampRegisterChatCommand("aura", function()
 		auraEnabled = not auraEnabled
@@ -221,9 +221,9 @@ function main()
 		resetScannerState()
 
 		if auraEnabled then
-			msg("Скрипт включен")
+			msg("РЎРєСЂРёРїС‚ РІРєР»СЋС‡РµРЅ")
 		else
-			msg("Скрипт выключен")
+			msg("РЎРєСЂРёРїС‚ РІС‹РєР»СЋС‡РµРЅ")
 		end
 	end)
 
@@ -247,9 +247,9 @@ function main()
             end
         end
 
-        -- ===== ОБРАБОТКА СКАНЕРА =====
+        -- ===== РћР‘Р РђР‘РћРўРљРђ РЎРљРђРќР•Р Рђ =====
         if scanner.active then
-            -- если ждём окно выбора дома, но оно не пришло
+            -- РµСЃР»Рё Р¶РґС‘Рј РѕРєРЅРѕ РІС‹Р±РѕСЂР° РґРѕРјР°, РЅРѕ РѕРЅРѕ РЅРµ РїСЂРёС€Р»Рѕ
             if scanner.waitingHouseDialog and os.clock() - scanner.lastAction > 5 then
                 scanner.lastAction = os.clock()
                 sampProcessChatInput("/flashminer")
@@ -264,13 +264,13 @@ local function renderGradientText(text, speed)
     local x_offset = 0
     
     for char in text:gmatch("[%z\1-\127\194-\244][\128-\191]*") do
-        -- Рассчитываем волну для блика
+        -- Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј РІРѕР»РЅСѓ РґР»СЏ Р±Р»РёРєР°
         local wave = math.sin(time - (x_offset * 0.1)) * 0.5 + 0.5
         
-        -- Цвета: от насыщенного оранжевого до ярко-желтого
-        -- Это создаст эффект «бегущего блика» по золоту
+        -- Р¦РІРµС‚Р°: РѕС‚ РЅР°СЃС‹С‰РµРЅРЅРѕРіРѕ РѕСЂР°РЅР¶РµРІРѕРіРѕ РґРѕ СЏСЂРєРѕ-Р¶РµР»С‚РѕРіРѕ
+        -- Р­С‚Рѕ СЃРѕР·РґР°СЃС‚ СЌС„С„РµРєС‚ В«Р±РµРіСѓС‰РµРіРѕ Р±Р»РёРєР°В» РїРѕ Р·РѕР»РѕС‚Сѓ
         local r = 1.0
-        local g = 0.5 + (wave * 0.4) -- Плавает от 0.5 до 0.9
+        local g = 0.5 + (wave * 0.4) -- РџР»Р°РІР°РµС‚ РѕС‚ 0.5 РґРѕ 0.9
         local b = 0.0
         
         imgui.TextColored(imgui.ImVec4(r, g, b, 1.0), char)
@@ -286,25 +286,25 @@ imgui.OnInitialize(function()
     
     local fontPath = getWorkingDirectory() .. '\\font\\agora.ttf' 
     local solidPath = getWorkingDirectory() .. '\\font\\fa-solid-900.ttf' 
-    local brandPath = getWorkingDirectory() .. '\\font\\fa-brands-400.ttf' -- СКАЧАЙ ЭТОТ ФАЙЛ
+    local brandPath = getWorkingDirectory() .. '\\font\\fa-brands-400.ttf' -- РЎРљРђР§РђР™ Р­РўРћРў Р¤РђР™Р›
 
     if doesFileExist(fontPath) then
-        -- 1. Основной шрифт
+        -- 1. РћСЃРЅРѕРІРЅРѕР№ С€СЂРёС„С‚
         imgui_font = imgui.GetIO().Fonts:AddFontFromFileTTF(fontPath, 18, config) 
         
-        -- Конфиг для подмешивания
+        -- РљРѕРЅС„РёРі РґР»СЏ РїРѕРґРјРµС€РёРІР°РЅРёСЏ
         local iconConfig = imgui.ImFontConfig()
         iconConfig.MergeMode = true
         iconConfig.PixelSnapH = true
-        -- РАСШИРЕННЫЙ ДИАПАЗОН (чтобы видело всё)
+        -- Р РђРЎРЁРР Р•РќРќР«Р™ Р”РРђРџРђР—РћРќ (С‡С‚РѕР±С‹ РІРёРґРµР»Рѕ РІСЃС‘)
         local iconRanges = imgui.new.uint16_t[3]({0xf000, 0xffff, 0})
 
-        -- 2. Подмешиваем Solid (иконки системные)
+        -- 2. РџРѕРґРјРµС€РёРІР°РµРј Solid (РёРєРѕРЅРєРё СЃРёСЃС‚РµРјРЅС‹Рµ)
         if doesFileExist(solidPath) then
             imgui.GetIO().Fonts:AddFontFromFileTTF(solidPath, 20, iconConfig, iconRanges)
         end
 
-        -- 3. Подмешиваем Brands (Биткоин, Телеграм и т.д.)
+        -- 3. РџРѕРґРјРµС€РёРІР°РµРј Brands (Р‘РёС‚РєРѕРёРЅ, РўРµР»РµРіСЂР°Рј Рё С‚.Рґ.)
         if doesFileExist(brandPath) then
             imgui.GetIO().Fonts:AddFontFromFileTTF(brandPath, 20, iconConfig, iconRanges)
         end
@@ -322,7 +322,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
     local isScanning = bot.isScanning
     local scanHouse = scanner.active and math.min(scanner.house, maxHouses) or bot.scanHouse
 
-    -- ===== ЕДИНЫЙ СТИЛЬ =====
+    -- ===== Р•Р”РРќР«Р™ РЎРўРР›Р¬ =====
     local style = imgui.GetStyle()
     style.WindowRounding, style.WindowBorderSize = 12.0, 1.5
     style.WindowPadding = imgui.ImVec2(20, 20)
@@ -339,7 +339,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
     imgui.PushStyleColor(imgui.Col.ButtonHovered, imgui.ImVec4(1.0, 0.7, 0.0, 0.2))
     imgui.PushStyleColor(imgui.Col.ButtonActive, imgui.ImVec4(1.0, 0.7, 0.0, 0.4))
 
-    -- ===== ГЛАВНОЕ ОКНО =====
+    -- ===== Р“Р›РђР’РќРћР• РћРљРќРћ =====
     imgui.SetNextWindowPos(imgui.ImVec2(20, 350), imgui.Cond.FirstUseEver)
     imgui.SetNextWindowSize(imgui.ImVec2(400, 0), imgui.Cond.Always)
     imgui.Begin("AURA CORE SYSTEM", showMenu, imgui.WindowFlags.NoDecoration)
@@ -348,7 +348,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
         local winWidth, draw = imgui.GetWindowWidth(), imgui.GetWindowDrawList()
         local color, radius = 0xCC00AAFF, 9
 
-        -- ИКОНКА КУРСА
+        -- РРљРћРќРљРђ РљРЈР РЎРђ
         local iX, iY = winPos.x + 350, winPos.y + 22
         draw:AddCircle(imgui.ImVec2(iX, iY), radius, color, 20, 1.3)
         imgui.SetCursorScreenPos(imgui.ImVec2(iX - 3, iY - 7))
@@ -357,7 +357,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
         imgui.InvisibleButton("##info_btn", imgui.ImVec2(20, 20))
         if imgui.IsItemHovered() then
             imgui.BeginTooltip()
-                imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8" ТЕКУЩИЙ КУРС:")
+                imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8" РўР•РљРЈР©РР™ РљРЈР РЎ:")
                 local drawT, pT, wT = imgui.GetWindowDrawList(), imgui.GetCursorScreenPos(), imgui.GetWindowWidth()
                 drawT:AddRectFilledMultiColor(
                     imgui.ImVec2(pT.x, pT.y + 2),
@@ -371,7 +371,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
             imgui.EndTooltip()
         end
 
-        -- ИКОНКА CONTROL CENTER
+        -- РРљРћРќРљРђ CONTROL CENTER
         local bX, bY = winPos.x + 380, winPos.y + 22
         draw:AddCircle(imgui.ImVec2(bX, bY), radius, color, 20, 1.3)
         draw:AddLine(imgui.ImVec2(bX - 5, bY - 4), imgui.ImVec2(bX + 5, bY - 4), color, 1.5)
@@ -384,11 +384,11 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
         end
         if imgui.IsItemHovered() then
             imgui.BeginTooltip()
-            imgui.Text(u8"Центр Управления")
+            imgui.Text(u8"Р¦РµРЅС‚СЂ РЈРїСЂР°РІР»РµРЅРёСЏ")
             imgui.EndTooltip()
         end
 
-        -- КОНТЕНТ
+        -- РљРћРќРўР•РќРў
         imgui.SetCursorScreenPos(startPos)
 
         local icon_bolt = " \239\131\167"
@@ -405,7 +405,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
         )
         imgui.Dummy(imgui.ImVec2(0, 15))
 
-        imgui.Text(u8"Статус: ")
+        imgui.Text(u8"РЎС‚Р°С‚СѓСЃ: ")
         imgui.SameLine()
         if active then
             imgui.TextColored(imgui.ImVec4(0.0, 1.0, 0.0, 1.0), "ACTIVE")
@@ -414,13 +414,13 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
         end
 
         imgui.Spacing()
-        imgui.Text(u8(string.format("Дом: %d/%d | Карта: %d/%d", currentHouse, maxHouses, currentStep, maxGpu)))
-        imgui.Text(u8"Собрано за сессию: ")
+        imgui.Text(u8(string.format("Р”РѕРј: %d/%d | РљР°СЂС‚Р°: %d/%d", currentHouse, maxHouses, currentStep, maxGpu)))
+        imgui.Text(u8"РЎРѕР±СЂР°РЅРѕ Р·Р° СЃРµСЃСЃРёСЋ: ")
         imgui.SameLine()
         imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), tostring(totalBTC) .. " BTC")
 
         if btcRate > 0 then
-            imgui.Text(u8"Примерная прибыль: ")
+            imgui.Text(u8"РџСЂРёРјРµСЂРЅР°СЏ РїСЂРёР±С‹Р»СЊ: ")
             imgui.SameLine()
             imgui.TextColored(imgui.ImVec4(0.0, 1.0, 0.5, 1.0), "$" .. math.floor(totalBTC * btcRate))
         end
@@ -430,7 +430,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
         imgui.Spacing()
 
         if active then
-            local statusText = u8("Обработка дома #" .. tostring(currentHouse) .. ", видеокарта #" .. tostring(currentStep))
+            local statusText = u8("РћР±СЂР°Р±РѕС‚РєР° РґРѕРјР° #" .. tostring(currentHouse) .. ", РІРёРґРµРѕРєР°СЂС‚Р° #" .. tostring(currentStep))
             imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), statusText)
             local pB, wB, prg = imgui.GetCursorScreenPos(), winWidth - 40, (os.clock() % 2) / 2
             draw:AddRectFilled(imgui.ImVec2(pB.x, pB.y + 2), imgui.ImVec2(pB.x + wB, pB.y + 4), 0x22FFFFFF)
@@ -438,7 +438,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
             imgui.Dummy(imgui.ImVec2(0, 10))
         else
             imgui.PushStyleColor(imgui.Col.Text, imgui.ImVec4(0.4, 0.4, 0.4, 1.0))
-            imgui.Text(u8"Система в режиме ожидания")
+            imgui.Text(u8"РЎРёСЃС‚РµРјР° РІ СЂРµР¶РёРјРµ РѕР¶РёРґР°РЅРёСЏ")
             imgui.PopStyleColor()
         end
 
@@ -449,7 +449,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
         imgui.SetNextWindowSize(imgui.ImVec2(400, 300), imgui.Cond.FirstUseEver)
         imgui.Begin(u8"   Mining Control Center", showControlCenter, imgui.WindowFlags.NoCollapse)
 
-            imgui.TextColored(imgui.ImVec4(1, 0.8, 0, 1), u8" ГЛАВНОЕ УПРАВЛЕНИЕ")
+            imgui.TextColored(imgui.ImVec4(1, 0.8, 0, 1), u8" Р“Р›РђР’РќРћР• РЈРџР РђР’Р›Р•РќРР•")
             imgui.Separator()
             imgui.Spacing()
 
@@ -457,18 +457,18 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
                 showMonitoring[0] = not showMonitoring[0]
                 imgui.ShowCursor = showMenu[0] or showControlCenter[0] or showMonitoring[0]
             end
-			if imgui.Button(u8"? SYSTEM SETTINGS", imgui.ImVec2(-1, 40)) then
+			if imgui.Button(u8"вљ™ SYSTEM SETTINGS", imgui.ImVec2(-1, 40)) then
 				showSettings[0] = true
 				showMonitoring[0] = false
 			end
 
             imgui.Spacing()
-            imgui.TextDisabled(u8"Другие модули пока в разработке...")
+            imgui.TextDisabled(u8"Р”СЂСѓРіРёРµ РјРѕРґСѓР»Рё РїРѕРєР° РІ СЂР°Р·СЂР°Р±РѕС‚РєРµ...")
 
         imgui.End()
     end
 
-    -- ===== МОНИТОРИНГ =====
+    -- ===== РњРћРќРРўРћР РРќР“ =====
     if showMonitoring[0] then
 		imgui.SetNextWindowSize(imgui.ImVec2(1100, 650), imgui.Cond.Always)
 		imgui.Begin(
@@ -483,7 +483,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 			local winSize = imgui.GetWindowSize()
 			imgui.SetCursorPos(imgui.ImVec2(winSize.x / 2 - 170, winSize.y / 2 - 45))
 			imgui.BeginGroup()
-				renderGradientText(u8"   СИНХРОНИЗАЦИЯ ДОМА #" .. currentScanHouse, 3.0)
+				renderGradientText(u8"   РЎРРќРҐР РћРќРР—РђР¦РРЇ Р”РћРњРђ #" .. currentScanHouse, 3.0)
 				imgui.Spacing()
 				imgui.ProgressBar(math.min(currentScanHouse, maxHouses) / maxHouses, imgui.ImVec2(340, 16), "")
 			imgui.EndGroup()
@@ -498,7 +498,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 			for i = 1, maxGpu do
 				local card = houseData[i]
 				if card then
-					if card.status == u8"Работает" then
+					if card.status == u8"Р Р°Р±РѕС‚Р°РµС‚" then
 						activeCount = activeCount + 1
 					end
 
@@ -516,18 +516,18 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 				avgTemp = avgTemp / tempCount
 			end
 
-			-- КНОПКА ОБНОВИТЬ
+			-- РљРќРћРџРљРђ РћР‘РќРћР’РРўР¬
 			imgui.SetCursorPos(imgui.ImVec2(imgui.GetWindowWidth() - 50, 12))
 			if imgui.Button("\xef\x80\xa1", imgui.ImVec2(30, 30)) then
 				startGlobalScan()
 			end
 			if imgui.IsItemHovered() then
-				imgui.SetTooltip(u8"Обновить данные всех домов")
+				imgui.SetTooltip(u8"РћР±РЅРѕРІРёС‚СЊ РґР°РЅРЅС‹Рµ РІСЃРµС… РґРѕРјРѕРІ")
 			end
 
-			-- ЛЕВАЯ ПАНЕЛЬ ДОМОВ
+			-- Р›Р•Р’РђРЇ РџРђРќР•Р›Р¬ Р”РћРњРћР’
 			imgui.BeginChild("##houses_panel", imgui.ImVec2(150, 0), true)
-				imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8" ДОМА")
+				imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8" Р”РћРњРђ")
 				imgui.Separator()
 				imgui.Spacing()
 
@@ -539,7 +539,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 						imgui.PushStyleColor(imgui.Col.HeaderActive, imgui.ImVec4(1.0, 0.7, 0.0, 0.45))
 					end
 
-					if imgui.Selectable(u8(" Дом #" .. i), isSelected) then
+					if imgui.Selectable(u8(" Р”РѕРј #" .. i), isSelected) then
 						selectedHouseTab = i
 						selectedGpuCard = 1
 					end
@@ -552,25 +552,25 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 
 			imgui.SameLine()
 
-			-- ПРАВАЯ ЧАСТЬ
+			-- РџР РђР’РђРЇ Р§РђРЎРўР¬
 			imgui.BeginGroup()
 
-				-- ВЕРХНЯЯ СВОДКА
+				-- Р’Р•Р РҐРќРЇРЇ РЎР’РћР”РљРђ
 				imgui.BeginChild("##summary_panel", imgui.ImVec2(0, 110), true, imgui.WindowFlags.NoScrollbar)
-					imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8(" ДОМ #" .. selectedHouseTab))
+					imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8(" Р”РћРњ #" .. selectedHouseTab))
 					imgui.Separator()
 
 					imgui.Columns(3, nil, false)
 
-					imgui.Text(u8"Активно карт")
+					imgui.Text(u8"РђРєС‚РёРІРЅРѕ РєР°СЂС‚")
 					imgui.TextColored(imgui.ImVec4(0.0, 1.0, 0.5, 1.0), tostring(activeCount) .. "/" .. tostring(maxGpu))
 					imgui.NextColumn()
 
-					imgui.Text(u8"BTC всего")
+					imgui.Text(u8"BTC РІСЃРµРіРѕ")
 					imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), string.format("%.6f", totalBtc))
 					imgui.NextColumn()
 
-					imgui.Text(u8"Средняя жидкость")
+					imgui.Text(u8"РЎСЂРµРґРЅСЏСЏ Р¶РёРґРєРѕСЃС‚СЊ")
 					imgui.TextColored(imgui.ImVec4(0.7, 0.9, 1.0, 1.0), string.format("%.1f %%", avgTemp))
 					imgui.NextColumn()
 
@@ -579,20 +579,20 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 
 				imgui.Spacing()
 
-				-- ЦЕНТР: СПИСОК КАРТ + ДЕТАЛИ
+				-- Р¦Р•РќРўР : РЎРџРРЎРћРљ РљРђР Рў + Р”Р•РўРђР›Р
 				imgui.BeginChild("##main_monitor_panel", imgui.ImVec2(0, -70), false)
 
-					-- СПИСОК ВИДЕОКАРТ СЛЕВА ВНУТРИ ПРАВОЙ ОБЛАСТИ
+					-- РЎРџРРЎРћРљ Р’РР”Р•РћРљРђР Рў РЎР›Р•Р’Рђ Р’РќРЈРўР Р РџР РђР’РћР™ РћР‘Р›РђРЎРўР
 					imgui.BeginChild("##gpu_list_panel", imgui.ImVec2(250, 0), true)
-						imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8" ВИДЕОКАРТЫ")
+						imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8" Р’РР”Р•РћРљРђР РўР«")
 						imgui.Separator()
 						imgui.Spacing()
 
 						for i = 1, maxGpu do
 							local card = houseData[i]
-							local label = u8(" Видеокарта #" .. i)
+							local label = u8(" Р’РёРґРµРѕРєР°СЂС‚Р° #" .. i)
 
-							if card and card.status == u8"Работает" then
+							if card and card.status == u8"Р Р°Р±РѕС‚Р°РµС‚" then
 								label = label .. u8("  [ON]")
 							else
 								label = label .. u8("  [OFF]")
@@ -606,23 +606,23 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 
 					imgui.SameLine()
 
-					-- ДЕТАЛЬНАЯ ПАНЕЛЬ
+					-- Р”Р•РўРђР›Р¬РќРђРЇ РџРђРќР•Р›Р¬
 					imgui.BeginChild("##gpu_detail_panel", imgui.ImVec2(0, 0), true)
 
 						local card = houseData[selectedGpuCard] or {
-							status = u8"Нет данных",
+							status = u8"РќРµС‚ РґР°РЅРЅС‹С…",
 							btc = "0.000000",
 							level = "0",
 							temp = "0"
 						}
 
-						local isWorking = (card.status == u8"Работает")
+						local isWorking = (card.status == u8"Р Р°Р±РѕС‚Р°РµС‚")
 
-						imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8(" Видеокарта #" .. selectedGpuCard))
+						imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8(" Р’РёРґРµРѕРєР°СЂС‚Р° #" .. selectedGpuCard))
 						imgui.Separator()
 						imgui.Spacing()
 
-						-- БОЛЬШАЯ КАРТОЧКА
+						-- Р‘РћР›Р¬РЁРђРЇ РљРђР РўРћР§РљРђ
 						local p = imgui.GetCursorScreenPos()
 						local draw = imgui.GetWindowDrawList()
 						local panelW = imgui.GetContentRegionAvail().x
@@ -639,7 +639,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 						)
 
 						imgui.SetCursorScreenPos(imgui.ImVec2(p.x + 20, p.y + 18))
-						imgui.Text(u8"Статус:")
+						imgui.Text(u8"РЎС‚Р°С‚СѓСЃ:")
 						imgui.SameLine()
 						imgui.TextColored(
 							isWorking and imgui.ImVec4(0.0, 1.0, 0.5, 1.0) or imgui.ImVec4(1.0, 0.3, 0.2, 1.0),
@@ -652,19 +652,19 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 						imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), tostring(card.btc))
 
 						imgui.SetCursorScreenPos(imgui.ImVec2(p.x + 20, p.y + 86))
-						imgui.Text(u8"Уровень:")
+						imgui.Text(u8"РЈСЂРѕРІРµРЅСЊ:")
 						imgui.SameLine()
 						imgui.TextColored(imgui.ImVec4(0.8, 0.9, 1.0, 1.0), tostring(card.level))
 
 						imgui.SetCursorScreenPos(imgui.ImVec2(p.x + 20, p.y + 120))
-						imgui.Text(u8"Жидкость:")
+						imgui.Text(u8"Р–РёРґРєРѕСЃС‚СЊ:")
 						imgui.SameLine()
 						imgui.TextColored(imgui.ImVec4(0.6, 0.9, 1.0, 1.0), tostring(card.temp) .. " %")
 
 						imgui.Dummy(imgui.ImVec2(panelW, panelH + 10))
 
-						-- МИНИ-СЕТКА КАРТ
-						imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8" БЫСТРЫЙ ОБЗОР")
+						-- РњРРќР-РЎР•РўРљРђ РљРђР Рў
+						imgui.TextColored(imgui.ImVec4(1.0, 0.8, 0.0, 1.0), u8" Р‘Р«РЎРўР Р«Р™ РћР‘Р—РћР ")
 						imgui.Separator()
 						imgui.Spacing()
 
@@ -674,7 +674,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 
 						for i = 1, maxGpu do
 							local c = houseData[i] or {}
-							local on = (c.status == u8"Работает")
+							local on = (c.status == u8"Р Р°Р±РѕС‚Р°РµС‚")
 							local pp = imgui.GetCursorScreenPos()
 							local dd = imgui.GetWindowDrawList()
 
@@ -716,7 +716,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 
 				imgui.EndChild()
 
-				-- НИЖНИЕ КНОПКИ
+				-- РќРР–РќРР• РљРќРћРџРљР
 				imgui.BeginChild("##bottom_buttons", imgui.ImVec2(0, 64), false)
 
 					local availW = imgui.GetContentRegionAvail().x
@@ -729,7 +729,7 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 					imgui.PushStyleColor(imgui.Col.ButtonActive, imgui.ImVec4(0.25, 0.18, 0.06, 0.95))
 					imgui.PushStyleColor(imgui.Col.Border, imgui.ImVec4(1.0, 0.75, 0.0, 0.65))
 
-					if imgui.Button(u8"СОБРАТЬ BTC", imgui.ImVec2(btnW, btnH)) then
+					if imgui.Button(u8"РЎРћР‘Р РђРўР¬ BTC", imgui.ImVec2(btnW, btnH)) then
 						singleBtcStats.collected = 0
 
 						btcCollector.active = true
@@ -740,25 +740,25 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 					end
 					imgui.SameLine(0, spacing)
 
-					if imgui.Button(u8"ЗАПУСТИТЬ КАРТЫ", imgui.ImVec2(btnW, btnH)) then
+					if imgui.Button(u8"Р—РђРџРЈРЎРўРРўР¬ РљРђР РўР«", imgui.ImVec2(btnW, btnH)) then
 						gpuStarter.active = true
 						gpuStarter.house = selectedHouseTab
 						sampProcessChatInput("/flashminer")
 					end
 					imgui.SameLine(0, spacing)
 
-					if imgui.Button(u8"ОБНОВИТЬ ДОМ", imgui.ImVec2(btnW, btnH)) then
+					if imgui.Button(u8"РћР‘РќРћР’РРўР¬ Р”РћРњ", imgui.ImVec2(btnW, btnH)) then
 						singleHouseRefresh.active = true
 						singleHouseRefresh.house = selectedHouseTab
 						sampProcessChatInput("/flashminer")
 					end
 					imgui.SameLine(0, spacing)
 
-					if imgui.Button(u8"ОБНОВИТЬ ВСЕ ДОМА", imgui.ImVec2(btnW, btnH)) then
+					if imgui.Button(u8"РћР‘РќРћР’РРўР¬ Р’РЎР• Р”РћРњРђ", imgui.ImVec2(btnW, btnH)) then
 						startGlobalScan()
 					end
 					
-					if imgui.Button(u8"СОБРАТЬ BTC СО ВСЕХ", imgui.ImVec2(btnW, btnH)) then
+					if imgui.Button(u8"РЎРћР‘Р РђРўР¬ BTC РЎРћ Р’РЎР•РҐ", imgui.ImVec2(btnW, btnH)) then
 						btcStats.collected = 0
 
 						globalBtcCollector.active = true
@@ -785,17 +785,17 @@ imgui.OnFrame(function() return showMenu[0] end, function(player)
 	if showSettings[0] then
 		imgui.Begin(u8"AURA | System Settings", showSettings)
 
-		imgui.Text(u8"Скорость операций")
+		imgui.Text(u8"РЎРєРѕСЂРѕСЃС‚СЊ РѕРїРµСЂР°С†РёР№")
 
-		imgui.SliderInt(u8"Скорость сбора BTC", collectDelay, 80, 400)
+		imgui.SliderInt(u8"РЎРєРѕСЂРѕСЃС‚СЊ СЃР±РѕСЂР° BTC", collectDelay, 80, 400)
 
 		imgui.Separator()
 
-		imgui.Text(u8"Будущие настройки:")
+		imgui.Text(u8"Р‘СѓРґСѓС‰РёРµ РЅР°СЃС‚СЂРѕР№РєРё:")
 
-		imgui.BulletText(u8"Авто сбор BTC")
-		imgui.BulletText(u8"Авто запуск карт")
-		imgui.BulletText(u8"Авто охлаждение")
+		imgui.BulletText(u8"РђРІС‚Рѕ СЃР±РѕСЂ BTC")
+		imgui.BulletText(u8"РђРІС‚Рѕ Р·Р°РїСѓСЃРє РєР°СЂС‚")
+		imgui.BulletText(u8"РђРІС‚Рѕ РѕС…Р»Р°Р¶РґРµРЅРёРµ")
 
 		imgui.End()
 	end
@@ -807,7 +807,7 @@ end)
 function sampev.onServerMessage(color, text)
     local cleanText = text:gsub('{......}', '')
 
-    local amount = cleanText:match("Вы вывели%s+(%d+)%s+BTC")
+    local amount = cleanText:match("Р’С‹ РІС‹РІРµР»Рё%s+(%d+)%s+BTC")
     if amount then
         amount = tonumber(amount) or 0
 
@@ -824,8 +824,8 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
         return
     end
 
-    -- ===== ТИХИЙ ПЕРЕХВАТ КУРСА =====
-    if cleanTitle:find("Курс валют") then
+    -- ===== РўРРҐРР™ РџР•Р Р•РҐР’РђРў РљРЈР РЎРђ =====
+    if cleanTitle:find("РљСѓСЂСЃ РІР°Р»СЋС‚") then
         local rateVal = text:match("Bitcoin %(BTC%):%s+%$([%d]+)")
         if rateVal then
             btcRate = tonumber(rateVal)
@@ -839,12 +839,12 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
         end
     end
 
-    -- ===== ВЫБОР ДОМА =====
-	if cleanTitle == "Выбор дома"
-	and text:find("Номер дома")
-	and text:find("Город")
-	and text:find("Налог")
-	and text:find("Энергия") then
+    -- ===== Р’Р«Р‘РћР  Р”РћРњРђ =====
+	if cleanTitle == "Р’С‹Р±РѕСЂ РґРѕРјР°"
+	and text:find("РќРѕРјРµСЂ РґРѕРјР°")
+	and text:find("Р“РѕСЂРѕРґ")
+	and text:find("РќР°Р»РѕРі")
+	and text:find("Р­РЅРµСЂРіРёСЏ") then
 		if scanner.active then
 			scanner.houseDialogId = id
 			scanner.waitingHouseDialog = false
@@ -861,7 +861,7 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 				scanner.active = false
 				bot.isScanning = false
 				bot.scanHouse = 1
-				msg("Синхронизация завершена")
+				msg("РЎРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ Р·Р°РІРµСЂС€РµРЅР°")
 				return false
 			end
 		end
@@ -925,8 +925,8 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 		return false
 	end
 
-    -- ===== СПИСОК ВИДЕОКАРТ =====
-	if cleanTitle:find("Выберите видеокарту") then
+    -- ===== РЎРџРРЎРћРљ Р’РР”Р•РћРљРђР Рў =====
+	if cleanTitle:find("Р’С‹Р±РµСЂРёС‚Рµ РІРёРґРµРѕРєР°СЂС‚Сѓ") then
 		local targetHouse
 
 		if scanner.active then
@@ -944,27 +944,27 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 		local cardIdx = 1
 
 		for line in text:gmatch("[^\r\n]+") do
-			if line:find("^Полка") then
+			if line:find("^РџРѕР»РєР°") then
 				local cleanLine = line:gsub("\t", " "):gsub("%s+", " ")
 
-				local isWorking = cleanLine:find("Работает") ~= nil
+				local isWorking = cleanLine:find("Р Р°Р±РѕС‚Р°РµС‚") ~= nil
 				local btcValue = cleanLine:match("(%d+%.%d+)") or "0.000000"
 				local btcValueNum = tonumber(btcValue) or 0
 				local btcWhole = math.floor(btcValueNum)
 
 
-				local cardLvl = cleanLine:match("(%d+)%s+уровень") or "0"
+				local cardLvl = cleanLine:match("(%d+)%s+СѓСЂРѕРІРµРЅСЊ") or "0"
 				local cardTemp = cleanLine:match("(%d+%.%d+)%%") or "0"
 
 				if globalBtcCollector.active and btcValueNum > 0 then
 					btcStats.collected = btcStats.collected + btcValueNum
 				end
-				local cardLvl = cleanLine:match("(%d+)%s+уровень") or "0"
+				local cardLvl = cleanLine:match("(%d+)%s+СѓСЂРѕРІРµРЅСЊ") or "0"
 				local cardTemp = cleanLine:match("(%d+%.%d+)%%") or "0"
 
 				if gpu_data[targetHouse] and gpu_data[targetHouse][cardIdx] then
 					gpu_data[targetHouse][cardIdx] = {
-						status = isWorking and u8"Работает" or u8"На паузе",
+						status = isWorking and u8"Р Р°Р±РѕС‚Р°РµС‚" or u8"РќР° РїР°СѓР·Рµ",
 						btc = btcValue,
 						level = cardLvl,
 						temp = cardTemp
@@ -1001,7 +1001,7 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 				if bot.gpu <= maxGpu then
 					sampSendDialogResponse(id, 1, bot.gpu - 1, "")
 				else
-					stopBot("Дом #" .. bot.house .. " обработан")
+					stopBot("Р”РѕРј #" .. bot.house .. " РѕР±СЂР°Р±РѕС‚Р°РЅ")
 				end
 			end)
 
@@ -1015,7 +1015,7 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 			local listboxId = -1
 
 			for line in text:gmatch("[^\r\n]+") do
-				if line:find("^Полка") then
+				if line:find("^РџРѕР»РєР°") then
 					local amount = tonumber(line:match("([%d%.]+)%s*BTC")) or 0
 					if amount >= 1 and targetListboxId == nil then
 						targetListboxId = listboxId
@@ -1034,7 +1034,7 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 					btcCollector.gpu = 1
 
 					if globalBtcCollector.active then
-						-- СНАЧАЛА ДОБАВЛЯЕМ ИТОГ ТЕКУЩЕГО ДОМА В ОБЩУЮ СТАТИСТИКУ
+						-- РЎРќРђР§РђР›Рђ Р”РћР‘РђР’Р›РЇР•Рњ РРўРћР“ РўР•РљРЈР©Р•Р“Рћ Р”РћРњРђ Р’ РћР‘Р©РЈР® РЎРўРђРўРРЎРўРРљРЈ
 						btcStats.collected = btcStats.collected + singleBtcStats.collected
 						singleBtcStats.collected = 0
 
@@ -1055,7 +1055,7 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 							local totalMoney = math.floor(totalBTC * btcRate)
 
 							msg(string.format(
-								"{FFFFFF}[AURA] Глобальный сбор завершен | {FFD700}BTC: %d {FFFFFF}| По курсу: {00FF66}%s${FFFFFF}",
+								"{FFFFFF}[AURA] Р“Р»РѕР±Р°Р»СЊРЅС‹Р№ СЃР±РѕСЂ Р·Р°РІРµСЂС€РµРЅ | {FFD700}BTC: %d {FFFFFF}| РџРѕ РєСѓСЂСЃСѓ: {00FF66}%s${FFFFFF}",
 								totalBTC,
 								formatNumberDots(totalMoney)
 							))
@@ -1068,7 +1068,7 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 						local totalMoney = math.floor(totalBTC * btcRate)
 
 						msg(string.format(
-							"{FFFFFF}[AURA] Дом #%d обработан | {FFD700}BTC: %d {FFFFFF}| По курсу: {00FF66}%s${FFFFFF}",
+							"{FFFFFF}[AURA] Р”РѕРј #%d РѕР±СЂР°Р±РѕС‚Р°РЅ | {FFD700}BTC: %d {FFFFFF}| РџРѕ РєСѓСЂСЃСѓ: {00FF66}%s${FFFFFF}",
 							btcCollector.house,
 							totalBTC,
 							formatNumberDots(totalMoney)
@@ -1089,8 +1089,8 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 			local listboxId = -1
 
 			for line in text:gmatch("[^\r\n]+") do
-				if line:find("^Полка") then
-					local isPaused = line:find("На паузе") ~= nil
+				if line:find("^РџРѕР»РєР°") then
+					local isPaused = line:find("РќР° РїР°СѓР·Рµ") ~= nil
 					local coolant = tonumber(line:match("([%d%.]+)%%")) or 0
 
 					if isPaused and coolant > 0 and targetListboxId == nil then
@@ -1141,18 +1141,18 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 		return
 	end
 	
-	-- ===== ПОДТВЕРЖДЕНИЕ ВЫВОДА ПРИБЫЛИ =====
-	if btcCollector.active and cleanTitle:find("Вывод прибыли видеокарты") then
+	-- ===== РџРћР”РўР’Р•Р Р–Р”Р•РќРР• Р’Р«Р’РћР”Рђ РџР РР‘Р«Р›Р =====
+	if btcCollector.active and cleanTitle:find("Р’С‹РІРѕРґ РїСЂРёР±С‹Р»Рё РІРёРґРµРѕРєР°СЂС‚С‹") then
 		lua_thread.create(function()
 			wait(250)
-			sampSendDialogResponse(id, 1, 0, "") -- "Вывод"
+			sampSendDialogResponse(id, 1, 0, "") -- "Р’С‹РІРѕРґ"
 		end)
 
 		return false
 	end
 
-    -- ===== МЕНЮ ОДНОЙ ВИДЕОКАРТЫ =====
-    if cleanTitle:find("Стойка") or text:find("видеокарту") then
+    -- ===== РњР•РќР® РћР”РќРћР™ Р’РР”Р•РћРљРђР РўР« =====
+    if cleanTitle:find("РЎС‚РѕР№РєР°") or text:find("РІРёРґРµРѕРєР°СЂС‚Сѓ") then
 		
 		if btcCollector.active then
 			lua_thread.create(function()
@@ -1165,7 +1165,7 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 				for line in text:gmatch("[^\r\n]+") do
 					local cleanLine = line:gsub("{......}", "")
 
-					if cleanLine:find("Забрать прибыль") then
+					if cleanLine:find("Р—Р°Р±СЂР°С‚СЊ РїСЂРёР±С‹Р»СЊ") then
 						local amount = cleanLine:match("%(([%d%.]+)%s*BTC%)")
 						amount = tonumber(amount or "0")
 
@@ -1182,7 +1182,7 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 				if canWithdraw and btnIdx ~= nil then
 					sampSendDialogResponse(id, 1, btnIdx, "")
 				else
-					sampSendDialogResponse(id, 0, 0, "") -- назад к списку
+					sampSendDialogResponse(id, 0, 0, "") -- РЅР°Р·Р°Рґ Рє СЃРїРёСЃРєСѓ
 				end
 			end)
 
@@ -1199,7 +1199,7 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
 				for line in text:gmatch("[^\r\n]+") do
 					local cleanLine = line:gsub("{......}", "")
 
-					if cleanLine:find("Запустить видеокарту") then
+					if cleanLine:find("Р—Р°РїСѓСЃС‚РёС‚СЊ РІРёРґРµРѕРєР°СЂС‚Сѓ") then
 						btnIdx = lineIndex
 						break
 					end
@@ -1221,9 +1221,9 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
             lua_thread.create(function()
                 wait(250)
 
-                if text:find("Снять биткоины") then
+                if text:find("РЎРЅСЏС‚СЊ Р±РёС‚РєРѕРёРЅС‹") then
                     local btnIdx = 0
-                    if text:find("Улучшить") then
+                    if text:find("РЈР»СѓС‡С€РёС‚СЊ") then
                         btnIdx = 1
                     end
                     sampSendDialogResponse(id, 1, btnIdx, "")
@@ -1237,7 +1237,7 @@ function sampev.onShowDialog(id, style, title, button1, button2, text)
                 if bot.gpu <= maxGpu then
                     sampProcessChatInput("/flashminer")
                 else
-                    stopBot("Дом #" .. bot.house .. " обработан")
+                    stopBot("Р”РѕРј #" .. bot.house .. " РѕР±СЂР°Р±РѕС‚Р°РЅ")
                 end
             end)
 
